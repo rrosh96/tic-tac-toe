@@ -90,6 +90,7 @@ class Game extends React.Component {
     this.state = {
       history : [{
         squares: Array(9).fill(null),
+        move : Array(2).fill(null),
       }],
       xIsNext : true,
       stepNumber : 0,
@@ -102,13 +103,17 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice(); // Cant we have used the current itself?? Why we created squares ?? - immutability.
+    const move = [parseInt(i/3) + 1, parseInt(i%3) + 1];
+    
     if(calculateWinner(squares) || squares[i]){
       return;
     }
     squares[i] = this.state.xIsNext ? 'X': 'O';
+
     this.setState({
       history : history.concat([{
         squares : squares,
+        move : move,
       }]),
       stepNumber : history.length,
       xIsNext: !this.state.xIsNext,  
@@ -130,9 +135,13 @@ class Game extends React.Component {
     //showing the moves
     const moves = history.map((step, move) => {
       const desc = move ? 'Go to move #' + move : 'Go to game start';
+      const userMove = step.move[0] === null ? "" : "(" + step.move[0] + "," + step.move[1] + ")";
       return (
-        <li key={move}>
-          <button onClick ={()=> this.jumpTo(move)}>{desc}</button>
+        <li key={move} >
+          <div className="width-200px" >
+            <button  onClick ={()=> this.jumpTo(move)}>{desc}</button>
+            <p className = {`move-info ${move=== this.state.stepNumber? 'bold': ''}`} >{userMove}</p>
+          </div>
         </li>
       )
     });
