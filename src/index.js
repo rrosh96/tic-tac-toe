@@ -29,29 +29,6 @@ function Square(props){
 }
 
 class Board extends React.Component {
-  // constructor(props){
-  //   super(props);
-  //   this.state = {
-  //     squares: Array(9).fill(null),
-  //     xIsNext : true,
-  //   };
-
-  // }
-
-  
-
-  // handleClick(i){
-  //   const squares = this.state.squares.slice();
-  //   if(calculateWinner(this.state.squares) || squares[i]){
-  //     return;
-  //   }
-  //   squares[i] = this.state.xIsNext ? 'X': 'O';
-  //   this.setState({
-  //     squares: squares,
-  //     xIsNext: !this.state.xIsNext,  
-  //   });
-  // }
-
   renderSquare(i) {
     return (
       <Square
@@ -61,24 +38,31 @@ class Board extends React.Component {
     );
   }
 
+  //
+  // Method to render entire columns. Using the rowIndex and the dimension of the square the 
+  // 2D index is converted to a 1D index.
+  //
+  renderColumns(rowIndex, squareDimension){
+    const col =[];
+    for(let i = 0; i < squareDimension; i++){
+      col.push(this.renderSquare(squareDimension * rowIndex + i));
+    }
+    return(
+      <div className="board-row">
+        {col}
+      </div>
+    );
+  }
+
   render() {
+    const squareDimension = 3;
+    const rows = [];
+    for (let i = 0; i < squareDimension; i++){
+        rows.push(this.renderColumns(i, squareDimension));
+    }
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {rows}
       </div>
     );
   }
